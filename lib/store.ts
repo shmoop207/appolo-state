@@ -7,13 +7,12 @@ export class Store<T extends { [index: string]: any }> extends EventDispatcher {
 
     private _states: T[] = [];
     private _stateIndex: number = -1;
+    private readonly MaxStates: number;
 
     constructor(private initialState: T = {} as T, private options: IOptions = {stateCount: 1}) {
         super();
 
-        if (this.options.stateCount <= 0) {
-            this.options.stateCount = 1;
-        }
+        this.MaxStates = this.options.stateCount || 1;
 
         this._init();
     }
@@ -30,39 +29,38 @@ export class Store<T extends { [index: string]: any }> extends EventDispatcher {
         return this.stateAt(this._stateIndex);
     }
 
-
     public get states(): IterableIterator<T> {
 
-        let $self = this;
-        let index = -1;
-        const iterator = {
+        let $self = this, index = -1;
+
+        return {
             [Symbol.iterator]() {
                 return this;
             },
             next() {
                 index++;
-                return index == $self._states.length
+                return index == $self.statesCount
                     ? {value: undefined, done: true}
                     : {value: $self.stateAt(index), done: false};
             }
         };
-
-        return iterator
     }
 
     public stateAt(index: number): T {
 
         index = this._checkStateIndex(index);
 
-        if (!this._states[index]) {
+        let state = this._states[index];
+
+        if (!state) {
             return null;
         }
 
-        return JSON.parse(JSON.stringify(this._states[index]));
+        return this._clone(state);
     }
 
     private _checkStateIndex(index: number): number {
-        return index <= 0 ? 0 : (index > this._states.length - 1 ? this._states.length - 1 : index)
+        return index <= 0 ? 0 : (index > this._statesCountIndex ? this._statesCountIndex : index)
     }
 
     public setState(value: Partial<T> | T) {
@@ -70,16 +68,15 @@ export class Store<T extends { [index: string]: any }> extends EventDispatcher {
 
         let newState = state ? deepmerge(state, value) : value;
 
-        if (this._stateIndex != this._states.length - 1) {
-            let oldIndex = this._stateIndex;
-            this._states = this._states.slice(0, oldIndex + 1);
+        if (this._stateIndex != this._statesCountIndex) {
+            this._states = this._states.slice(0, this._stateIndex + 1);
         }
 
         this._states.push(newState as T);
 
-        this._stateIndex = this._states.length - 1;
+        this._stateIndex = this._statesCountIndex;
 
-        if (this._states.length > this.options.stateCount) {
+        if (this.statesCount > this.MaxStates) {
             this._states.shift();
         }
 
@@ -87,7 +84,15 @@ export class Store<T extends { [index: string]: any }> extends EventDispatcher {
     }
 
     public get statesCount(): number {
-        return this._states.length - 1;
+        return this._states.length;
+    }
+
+    private get _statesCountIndex(): number {
+        return this.statesCount - 1;
+    }
+
+    private _clone(state: T): T {
+        return JSON.parse(JSON.stringify(state));
     }
 
     public get prevState(): T {
