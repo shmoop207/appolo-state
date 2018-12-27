@@ -1,3 +1,3 @@
 export interface IOptions {
-    stateCount?: number
+    maxStates?: number
 }

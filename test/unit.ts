@@ -13,14 +13,14 @@ describe("State", () => {
 
     it("Should  get  state", () => {
 
-        let store = new Store<{ item: number }>({item: 0}, {stateCount: 10});
+        let store = new Store<{ item: number }>({item: 0}, {maxStates: 10});
 
         store.currentState.item.should.be.eq(0);
     });
 
     it("Should  not change  state", () => {
 
-        let store = new Store<{ item: number }>({item: 0}, {stateCount: 10});
+        let store = new Store<{ item: number }>({item: 0}, {maxStates: 10});
 
         store.currentState.item++;
 
@@ -29,7 +29,7 @@ describe("State", () => {
 
     it("Should set state", () => {
 
-        let store = new Store<{ item: number }>({item: 0}, {stateCount: 10});
+        let store = new Store<{ item: number }>({item: 0}, {maxStates: 10});
 
         store.setState({item: 1});
 
@@ -38,7 +38,7 @@ describe("State", () => {
 
     it("Should fire event on state change", () => {
 
-        let store = new Store<{ item: number }>({item: 0}, {stateCount: 10});
+        let store = new Store<{ item: number }>({item: 0}, {maxStates: 10});
 
         store.on("stateChanged", function (state) {
             state.item.should.be.eq(1);
@@ -55,7 +55,7 @@ describe("State", () => {
 
     it("Should iterate", () => {
 
-        let store = new Store<{ item: number }>({item: 0}, {stateCount: 10});
+        let store = new Store<{ item: number }>({item: 0}, {maxStates: 10});
 
 
         store.setState({item: 1});
@@ -76,7 +76,7 @@ describe("State", () => {
 
     it("Should go to prev state", () => {
 
-        let store = new Store<{ item: number }>({item: 0}, {stateCount: 10});
+        let store = new Store<{ item: number }>({item: 0}, {maxStates: 10});
 
 
         store.setState({item: 1});
@@ -90,7 +90,7 @@ describe("State", () => {
 
     it("Should go to next state", () => {
 
-        let store = new Store<{ item: number }>({item: 0}, {stateCount: 10});
+        let store = new Store<{ item: number }>({item: 0}, {maxStates: 10});
 
 
         store.setState({item: 1});
@@ -115,7 +115,7 @@ describe("State", () => {
 
     it("Should go to  state by index and set State", () => {
 
-        let store = new Store<{ item: number }>({item: 0}, {stateCount: 10});
+        let store = new Store<{ item: number }>({item: 0}, {maxStates: 10});
 
 
         store.setState({item: 1});
@@ -133,7 +133,7 @@ describe("State", () => {
 
     it("Should go to  state by index", () => {
 
-        let store = new Store<{ item: number }>({item: 0}, {stateCount: 10});
+        let store = new Store<{ item: number }>({item: 0}, {maxStates: 10});
 
 
         store.setState({item: 1});
@@ -153,7 +153,7 @@ describe("State", () => {
 
     it("Should go to  state by bigger index ", () => {
 
-        let store = new Store<{ item: number }>({item: 0}, {stateCount: 10});
+        let store = new Store<{ item: number }>({item: 0}, {maxStates: 10});
 
 
         store.setState({item: 1});
@@ -179,7 +179,7 @@ describe("State", () => {
 
     it("Should go to reset ", () => {
 
-        let store = new Store<{ item: number }>({item: 0}, {stateCount: 10});
+        let store = new Store<{ item: number }>({item: 0}, {maxStates: 10});
 
 
         store.setState({item: 1});
@@ -202,7 +202,7 @@ describe("State", () => {
 
     it("Should go to remove old states ", () => {
 
-        let store = new Store<{ item: number }>({item: 0}, {stateCount: 5});
+        let store = new Store<{ item: number }>({item: 0}, {maxStates: 5});
 
         store.setState({item: 1});
         store.setState({item: 2});
@@ -226,7 +226,7 @@ describe("State", () => {
                 super({item: 0})
             }
 
-            @action
+            @action()
             set item(value) {
                 this.setState({item: value});
             }
@@ -253,12 +253,12 @@ describe("State", () => {
                 super({item: 0})
             }
 
-            @action
+            @action()
             set item(value) {
                 this.setState({item: value});
             }
 
-            @action
+            @action()
             setItem(value) {
                 this.setState({item: value});
             }
@@ -296,7 +296,7 @@ describe("State", () => {
             }
 
 
-            @action
+            @action("SomeName")
             async setItem(value) {
 
                 await delay(0);
@@ -309,7 +309,7 @@ describe("State", () => {
 
         store.setItem(6);
 
-        let result = await store.once("setItem");
+        let result = await store.once("SomeName");
 
 
         result.item.should.be.eq(6);

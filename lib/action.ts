@@ -1,32 +1,36 @@
 import "reflect-metadata";
 
 
-export function action(target: any, propertyKey: string, descriptor?: PropertyDescriptor): void {
+export function action(name?: string): (target: any, propertyKey: string, descriptor?: PropertyDescriptor) => void {
 
-    let methodName = "";
+    return function (target: any, propertyKey: string, descriptor?: PropertyDescriptor) {
 
-    if (descriptor.value) {
-        methodName = "value";
-    } else if (descriptor.set) {
-        methodName = "set";
-    }
+        let methodName = "";
 
-    if (!methodName) {
-        return;
-    }
-
-    let method = descriptor[methodName];
-
-    descriptor[methodName] = async function () {
-        let result =  method.apply(this, arguments);
-
-        if(result instanceof Promise){
-            result = await result;
+        if (descriptor.value) {
+            methodName = "value";
+        } else if (descriptor.set) {
+            methodName = "set";
         }
 
-        this.fireEvent(propertyKey, this.currentState);
+        if (!methodName) {
+            return;
+        }
 
-        return result;
+        let method = descriptor[methodName];
+
+        descriptor[methodName] = async function () {
+            let result = method.apply(this, arguments);
+
+            if (result instanceof Promise) {
+                result = await result;
+            }
+
+            this.fireEvent(name || propertyKey, this.currentState);
+
+            return result;
+        }
     }
+
 
 }

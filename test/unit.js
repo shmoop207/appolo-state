@@ -11,21 +11,21 @@ function delay(time) {
 }
 describe("State", () => {
     it("Should  get  state", () => {
-        let store = new index_1.Store({ item: 0 }, { stateCount: 10 });
+        let store = new index_1.Store({ item: 0 }, { maxStates: 10 });
         store.currentState.item.should.be.eq(0);
     });
     it("Should  not change  state", () => {
-        let store = new index_1.Store({ item: 0 }, { stateCount: 10 });
+        let store = new index_1.Store({ item: 0 }, { maxStates: 10 });
         store.currentState.item++;
         store.currentState.item.should.be.eq(0);
     });
     it("Should set state", () => {
-        let store = new index_1.Store({ item: 0 }, { stateCount: 10 });
+        let store = new index_1.Store({ item: 0 }, { maxStates: 10 });
         store.setState({ item: 1 });
         store.currentState.item.should.be.eq(1);
     });
     it("Should fire event on state change", () => {
-        let store = new index_1.Store({ item: 0 }, { stateCount: 10 });
+        let store = new index_1.Store({ item: 0 }, { maxStates: 10 });
         store.on("stateChanged", function (state) {
             state.item.should.be.eq(1);
             state.item++;
@@ -34,7 +34,7 @@ describe("State", () => {
         store.setState({ item: 1 });
     });
     it("Should iterate", () => {
-        let store = new index_1.Store({ item: 0 }, { stateCount: 10 });
+        let store = new index_1.Store({ item: 0 }, { maxStates: 10 });
         store.setState({ item: 1 });
         store.setState({ item: 2 });
         let count = 0;
@@ -45,14 +45,14 @@ describe("State", () => {
         store.states.next().value.item.should.be.eq(0);
     });
     it("Should go to prev state", () => {
-        let store = new index_1.Store({ item: 0 }, { stateCount: 10 });
+        let store = new index_1.Store({ item: 0 }, { maxStates: 10 });
         store.setState({ item: 1 });
         store.setState({ item: 2 });
         store.setState({ item: 3 });
         store.prevState.item.should.be.eq(2);
     });
     it("Should go to next state", () => {
-        let store = new index_1.Store({ item: 0 }, { stateCount: 10 });
+        let store = new index_1.Store({ item: 0 }, { maxStates: 10 });
         store.setState({ item: 1 });
         store.setState({ item: 2 });
         store.setState({ item: 3 });
@@ -66,7 +66,7 @@ describe("State", () => {
         store.nextState.item.should.be.eq(3);
     });
     it("Should go to  state by index and set State", () => {
-        let store = new index_1.Store({ item: 0 }, { stateCount: 10 });
+        let store = new index_1.Store({ item: 0 }, { maxStates: 10 });
         store.setState({ item: 1 });
         store.setState({ item: 2 });
         store.setState({ item: 3 });
@@ -76,7 +76,7 @@ describe("State", () => {
         store.nextState.item.should.be.eq(3);
     });
     it("Should go to  state by index", () => {
-        let store = new index_1.Store({ item: 0 }, { stateCount: 10 });
+        let store = new index_1.Store({ item: 0 }, { maxStates: 10 });
         store.setState({ item: 1 });
         store.setState({ item: 2 });
         store.setState({ item: 3 });
@@ -87,7 +87,7 @@ describe("State", () => {
         store.nextState.item.should.be.eq(4);
     });
     it("Should go to  state by bigger index ", () => {
-        let store = new index_1.Store({ item: 0 }, { stateCount: 10 });
+        let store = new index_1.Store({ item: 0 }, { maxStates: 10 });
         store.setState({ item: 1 });
         store.setState({ item: 2 });
         store.setState({ item: 3 });
@@ -102,7 +102,7 @@ describe("State", () => {
         store.prevState.item.should.be.eq(5);
     });
     it("Should go to reset ", () => {
-        let store = new index_1.Store({ item: 0 }, { stateCount: 10 });
+        let store = new index_1.Store({ item: 0 }, { maxStates: 10 });
         store.setState({ item: 1 });
         store.setState({ item: 2 });
         store.setState({ item: 3 });
@@ -115,7 +115,7 @@ describe("State", () => {
         store.prevState.item.should.be.eq(0);
     });
     it("Should go to remove old states ", () => {
-        let store = new index_1.Store({ item: 0 }, { stateCount: 5 });
+        let store = new index_1.Store({ item: 0 }, { maxStates: 5 });
         store.setState({ item: 1 });
         store.setState({ item: 2 });
         store.setState({ item: 3 });
@@ -135,7 +135,7 @@ describe("State", () => {
             }
         }
         tslib_1.__decorate([
-            index_1.action
+            index_1.action()
         ], TempStore.prototype, "item", null);
         let store = new TempStore();
         store.on("item", (state) => {
@@ -158,10 +158,10 @@ describe("State", () => {
             }
         }
         tslib_1.__decorate([
-            index_1.action
+            index_1.action()
         ], TempStore.prototype, "item", null);
         tslib_1.__decorate([
-            index_1.action
+            index_1.action()
         ], TempStore.prototype, "setItem", null);
         let store = new TempStore();
         store.on("item", (state) => {
@@ -188,11 +188,11 @@ describe("State", () => {
             }
         }
         tslib_1.__decorate([
-            index_1.action
+            index_1.action("SomeName")
         ], TempStore.prototype, "setItem", null);
         let store = new TempStore();
         store.setItem(6);
-        let result = await store.once("setItem");
+        let result = await store.once("SomeName");
         result.item.should.be.eq(6);
     });
 });

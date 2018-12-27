@@ -9,10 +9,10 @@ export class Store<T extends { [index: string]: any }> extends EventDispatcher {
     private _stateIndex: number = -1;
     private readonly MaxStates: number;
 
-    constructor(private initialState: T = {} as T, private options: IOptions = {stateCount: 1}) {
+    constructor(private initialState: T = {} as T, private options: IOptions = {maxStates: 1}) {
         super();
 
-        this.MaxStates = this.options.stateCount || 1;
+        this.MaxStates = this.options.maxStates || 1;
 
         this._init();
     }
@@ -63,10 +63,16 @@ export class Store<T extends { [index: string]: any }> extends EventDispatcher {
         return index <= 0 ? 0 : (index > this._statesCountIndex ? this._statesCountIndex : index)
     }
 
-    public setState(value: Partial<T> | T) {
+    public setState(value: Partial<T> | T, options: { arrayMerge?: "override" | "extend" } = {arrayMerge: "extend"}) {
         let state = this.currentState;
 
-        let newState = state ? deepmerge(state, value) : value;
+        let mergeOptions: any = {};
+
+        if (options.arrayMerge == "override") {
+            mergeOptions.arrayMerge = (destinationArray, sourceArray, options) => sourceArray
+        }
+
+        let newState = state ? deepmerge(state, value, mergeOptions) : value;
 
         if (this._stateIndex != this._statesCountIndex) {
             this._states = this._states.slice(0, this._stateIndex + 1);
