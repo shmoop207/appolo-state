@@ -126,7 +126,7 @@ class MyStore extend Store<{ counter: number }>{
     }
 }
 
-async (function (){
+(async function (){
 
 let store = new MyStore<>();
 
