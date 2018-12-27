@@ -21,7 +21,7 @@ let store = new Store<{ counter: number }>({counter: 0}, {maxStates: 10});
 
 ```
 
-### `setState(value: Partial<T>)`
+#### `setState(value: Partial<T>,options={arrayMerge:"extend"})`
 change the current to new state
 event `stateChanged` if fired on state changed
 ```javascript
@@ -33,7 +33,7 @@ store.setState({counter: 1});
 
 ```
 
-### `get currentState():T`
+#### `get currentState():T`
 return copy of the current state
 ```javascript
 import {Store} from "appolo-store"
@@ -60,13 +60,13 @@ store.stateAt(1).counter; // 1
 
 
 ```
-### `get prevState():T`
+#### `get prevState():T`
 return the previous state
 
-### `get nextState():T`
+#### `get nextState():T`
 return the next state
 
-### `goToState(index: number)`
+#### `goToState(index: number)`
 index -  the state index to change to
 
 ```javascript
@@ -82,10 +82,10 @@ store.currentState.counter // 1
 
 ```
 
-### `goToPrevState()`
+#### `goToPrevState()`
 go to previous state
 
-### `goToNextState()`
+#### `goToNextState()`
 go to next state
 
 ### Events
@@ -163,7 +163,7 @@ for (let state of  store.states) {
 ```
 
 
-### `reset`
+#### `reset`
 ```javascript
 import {Store} from "appolo-store"
 
