@@ -2,9 +2,9 @@
   "name": "appolo-state",
   "description": "simple state managemnt for nodejs",
   "keywords": [
-    "cache",
-    "lru",
-    "memory"
+    "state",
+    "appolo",
+    "state management"
   ],
   "author": {
     "name": "Roman Svichar",
@@ -18,7 +18,7 @@
     "test": "mocha test"
   },
   "main": "./index.js",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
   "repository": {
     "type": "git",

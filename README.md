@@ -6,7 +6,7 @@ simple state manager for nodejs built with typescript
 
 ## Installation
 ```javascript
-npm install appolo-sate --save
+npm install appolo-state --save
 ```
 ## Usage
 
@@ -46,7 +46,7 @@ import {Store} from "appolo-store"
 
 
 ```
-### `stateAt(index: number): T`
+#### `stateAt(index: number): T`
 return state copy at given index
 ```javascript
 import {Store} from "appolo-store"
