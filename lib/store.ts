@@ -24,7 +24,7 @@ export class Store<T extends { [index: string]: any }> extends EventDispatcher {
             this._states.push(this.initialState);
         }
 
-        this._stateIndex = this._statesCountIndex;
+        this._stateIndex = this.countIndex;
     }
 
 
@@ -46,7 +46,7 @@ export class Store<T extends { [index: string]: any }> extends EventDispatcher {
             },
             next() {
                 index++;
-                return index == $self.statesCount
+                return index == $self.count
                     ? {value: undefined, done: true}
                     : {value: $self.stateAt(index), done: false};
             }
@@ -67,7 +67,7 @@ export class Store<T extends { [index: string]: any }> extends EventDispatcher {
     }
 
     private _checkStateIndex(index: number): number {
-        return index <= 0 ? 0 : (index > this._statesCountIndex ? this._statesCountIndex : index)
+        return index <= 0 ? 0 : (index > this.countIndex ? this.countIndex : index)
     }
 
     public setState(value: Partial<T> | T, options: { arrayMerge?: "override" | "extend" } = {arrayMerge: "extend"}) {
@@ -81,27 +81,31 @@ export class Store<T extends { [index: string]: any }> extends EventDispatcher {
 
         let newState = state ? deepmerge(state, value, mergeOptions) : value;
 
-        if (this._stateIndex != this._statesCountIndex) {
+        if (this._stateIndex != this.countIndex) {
             this._states = this._states.slice(0, this._stateIndex + 1);
         }
 
         this._states.push(newState as T);
 
-        this._stateIndex = this._statesCountIndex;
+        this._stateIndex = this.countIndex;
 
-        if (this.statesCount > this.MaxStates) {
+        if (this.count > this.MaxStates) {
             this._states.shift();
         }
 
         this.fireEvent("stateChanged", this.currentState);
     }
 
-    public get statesCount(): number {
+    public get count(): number {
         return this._states.length;
     }
 
-    private get _statesCountIndex(): number {
-        return this.statesCount - 1;
+    public get currentIndex(): number {
+        return this._stateIndex;
+    }
+
+    private get countIndex(): number {
+        return this.count - 1;
     }
 
     private _clone(state: T): T {
