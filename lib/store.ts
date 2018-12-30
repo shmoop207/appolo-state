@@ -9,7 +9,7 @@ export class Store<T extends { [index: string]: any }> extends EventDispatcher {
     private _stateIndex: number = -1;
     private readonly MaxStates: number;
 
-    constructor(private initialState: T = {} as T, private options: IOptions = {maxStates: 1}) {
+    constructor(private initialState: T | T[] = {} as T, private options: IOptions = {maxStates: 1}) {
         super();
 
         this.MaxStates = this.options.maxStates || 1;
@@ -18,8 +18,15 @@ export class Store<T extends { [index: string]: any }> extends EventDispatcher {
     }
 
     private _init() {
-        this.setState(this.createInitialState());
+        if (Array.isArray(this.initialState)) {
+            this._states = this.initialState;
+        } else {
+            this._states.push(this.initialState);
+        }
+
+        this._stateIndex = this._statesCountIndex;
     }
+
 
     protected createInitialState(): T {
         return this.initialState as T;
