@@ -32,11 +32,11 @@ export class Store<T extends { [index: string]: any }> extends EventDispatcher {
         return this.initialState as T;
     }
 
-    public get currentState(): T {
+    public  state(): T {
         return this.stateAt(this._stateIndex);
     }
 
-    public get states(): IterableIterator<T> {
+    public states(): IterableIterator<T> {
 
         let $self = this, index = -1;
 
@@ -71,7 +71,7 @@ export class Store<T extends { [index: string]: any }> extends EventDispatcher {
     }
 
     public setState(value: Partial<T> | T, options: { arrayMerge?: "override" | "extend" } = {arrayMerge: "extend"}) {
-        let state = this.currentState;
+        let state = this.state;
 
         let mergeOptions: any = {};
 
@@ -87,13 +87,14 @@ export class Store<T extends { [index: string]: any }> extends EventDispatcher {
 
         this._states.push(newState as T);
 
-        this._stateIndex = this.countIndex;
-
         if (this.count > this.MaxStates) {
             this._states.shift();
         }
 
-        this.fireEvent("stateChanged", this.currentState);
+        this._stateIndex = this.countIndex;
+
+
+        this.fireEvent("stateChanged", this.state());
     }
 
     public get count(): number {
@@ -137,7 +138,7 @@ export class Store<T extends { [index: string]: any }> extends EventDispatcher {
         this._stateIndex = index;
 
         if (oldIndex != this._stateIndex) {
-            this.fireEvent("stateChanged", this.currentState);
+            this.fireEvent("stateChanged", this.state);
         }
     }
 

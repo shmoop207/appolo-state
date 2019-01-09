@@ -15,16 +15,16 @@ describe("State", () => {
 
         let store = new Store<{ item: number }>({item: 0}, {maxStates: 10});
 
-        store.currentState.item.should.be.eq(0);
+        store.state().item.should.be.eq(0);
     });
 
     it("Should  not change  state", () => {
 
         let store = new Store<{ item: number }>({item: 0}, {maxStates: 10});
 
-        store.currentState.item++;
+        store.state().item++;
 
-        store.currentState.item.should.be.eq(0);
+        store.state().item.should.be.eq(0);
     });
 
     it("Should set state", () => {
@@ -33,7 +33,7 @@ describe("State", () => {
 
         store.setState({item: 1});
 
-        store.currentState.item.should.be.eq(1);
+        store.state().item.should.be.eq(1);
     });
 
     it("Should fire event on state change", () => {
@@ -45,7 +45,7 @@ describe("State", () => {
 
             state.item++;
 
-            store.currentState.item.should.be.eq(1);
+            store.state().item.should.be.eq(1);
         });
 
         store.setState({item: 1});
@@ -63,13 +63,13 @@ describe("State", () => {
 
         let count = 0;
 
-        for (let state of  store.states) {
+        for (let state of  store.states()) {
             count += state.item;
         }
 
         count.should.be.eq(3);
 
-        store.states.next().value.item.should.be.eq(0);
+        store.states().next().value.item.should.be.eq(0);
 
 
     });
@@ -99,14 +99,14 @@ describe("State", () => {
 
         store.goToPrevState();
 
-        store.currentState.item.should.be.eq(2);
+        store.state().item.should.be.eq(2);
 
         store.prevState.item.should.be.eq(1);
         store.nextState.item.should.be.eq(3);
 
         store.goToNextState();
 
-        store.currentState.item.should.be.eq(3);
+        store.state().item.should.be.eq(3);
 
         store.prevState.item.should.be.eq(2);
         store.nextState.item.should.be.eq(3);
@@ -124,7 +124,7 @@ describe("State", () => {
 
         store.goToState(2);
 
-        store.currentState.item.should.be.eq(2);
+        store.state().item.should.be.eq(2);
 
         store.prevState.item.should.be.eq(1);
         store.nextState.item.should.be.eq(3);
@@ -144,7 +144,7 @@ describe("State", () => {
 
         store.setState({item: 4});
 
-        store.currentState.item.should.be.eq(4);
+        store.state().item.should.be.eq(4);
 
         store.prevState.item.should.be.eq(2);
         store.nextState.item.should.be.eq(4);
@@ -167,7 +167,7 @@ describe("State", () => {
 
         store.setState({item: 6});
 
-        store.currentState.item.should.be.eq(6);
+        store.state().item.should.be.eq(6);
 
         store.stateAt(2).item.should.be.eq(5);
         store.stateAt(1).item.should.be.eq(1);
@@ -191,7 +191,7 @@ describe("State", () => {
 
         store.reset();
 
-        store.currentState.item.should.be.eq(0);
+        store.state().item.should.be.eq(0);
 
         store.stateAt(2).item.should.be.eq(0);
         store.nextState.item.should.be.eq(0);
@@ -212,7 +212,7 @@ describe("State", () => {
         store.setState({item: 6});
 
 
-        store.currentState.item.should.be.eq(6);
+        store.state().item.should.be.eq(6);
 
         store.stateAt(0).item.should.be.eq(2);
 
@@ -282,7 +282,7 @@ describe("State", () => {
         valueSetter.should.be.eq(5);
         valueFn.should.be.eq(6);
 
-        store.currentState.item.should.be.eq(6);
+        store.state().item.should.be.eq(6);
 
     });
 

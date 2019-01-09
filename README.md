@@ -33,7 +33,7 @@ store.setState({counter: 1});
 
 ```
 
-#### `get currentState():T`
+#### `state():T`
 return copy of the current state
 ```javascript
 import {Store} from "appolo-store"
@@ -42,7 +42,7 @@ import {Store} from "appolo-store"
 
     store.setState({counter: 1});
 
-    let state = store.currentState
+    let state = store.state()
 
 
 ```
@@ -78,7 +78,7 @@ store.setState({counter: 1});
 store.setState({counter: 2});
 store.goToState(1);
 
-store.currentState.counter // 1
+store.state().counter // 1
 
 ```
 
@@ -156,7 +156,7 @@ let store = new Store<{ counter: number }>({counter: 0});
 store.setState({counter: 1});
 store.setState({counter: 2});
 
-for (let state of  store.states) {
+for (let state of  store.states()) {
     console.log(state.counter) // 0 ,1 ,2
 }
 
@@ -174,7 +174,7 @@ store.setState({counter: 2});
 
 store.reset()
 
-store.currentState.counter // 0
+store.state().counter // 0
 
 ```
 

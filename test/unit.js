@@ -12,24 +12,24 @@ function delay(time) {
 describe("State", () => {
     it("Should  get  state", () => {
         let store = new index_1.Store({ item: 0 }, { maxStates: 10 });
-        store.currentState.item.should.be.eq(0);
+        store.state().item.should.be.eq(0);
     });
     it("Should  not change  state", () => {
         let store = new index_1.Store({ item: 0 }, { maxStates: 10 });
-        store.currentState.item++;
-        store.currentState.item.should.be.eq(0);
+        store.state().item++;
+        store.state().item.should.be.eq(0);
     });
     it("Should set state", () => {
         let store = new index_1.Store({ item: 0 }, { maxStates: 10 });
         store.setState({ item: 1 });
-        store.currentState.item.should.be.eq(1);
+        store.state().item.should.be.eq(1);
     });
     it("Should fire event on state change", () => {
         let store = new index_1.Store({ item: 0 }, { maxStates: 10 });
         store.on("stateChanged", function (state) {
             state.item.should.be.eq(1);
             state.item++;
-            store.currentState.item.should.be.eq(1);
+            store.state().item.should.be.eq(1);
         });
         store.setState({ item: 1 });
     });
@@ -38,11 +38,11 @@ describe("State", () => {
         store.setState({ item: 1 });
         store.setState({ item: 2 });
         let count = 0;
-        for (let state of store.states) {
+        for (let state of store.states()) {
             count += state.item;
         }
         count.should.be.eq(3);
-        store.states.next().value.item.should.be.eq(0);
+        store.states().next().value.item.should.be.eq(0);
     });
     it("Should go to prev state", () => {
         let store = new index_1.Store({ item: 0 }, { maxStates: 10 });
@@ -57,11 +57,11 @@ describe("State", () => {
         store.setState({ item: 2 });
         store.setState({ item: 3 });
         store.goToPrevState();
-        store.currentState.item.should.be.eq(2);
+        store.state().item.should.be.eq(2);
         store.prevState.item.should.be.eq(1);
         store.nextState.item.should.be.eq(3);
         store.goToNextState();
-        store.currentState.item.should.be.eq(3);
+        store.state().item.should.be.eq(3);
         store.prevState.item.should.be.eq(2);
         store.nextState.item.should.be.eq(3);
     });
@@ -71,7 +71,7 @@ describe("State", () => {
         store.setState({ item: 2 });
         store.setState({ item: 3 });
         store.goToState(2);
-        store.currentState.item.should.be.eq(2);
+        store.state().item.should.be.eq(2);
         store.prevState.item.should.be.eq(1);
         store.nextState.item.should.be.eq(3);
     });
@@ -82,7 +82,7 @@ describe("State", () => {
         store.setState({ item: 3 });
         store.goToState(2);
         store.setState({ item: 4 });
-        store.currentState.item.should.be.eq(4);
+        store.state().item.should.be.eq(4);
         store.prevState.item.should.be.eq(2);
         store.nextState.item.should.be.eq(4);
     });
@@ -95,7 +95,7 @@ describe("State", () => {
         store.goToState(1);
         store.setState({ item: 5 });
         store.setState({ item: 6 });
-        store.currentState.item.should.be.eq(6);
+        store.state().item.should.be.eq(6);
         store.stateAt(2).item.should.be.eq(5);
         store.stateAt(1).item.should.be.eq(1);
         store.nextState.item.should.be.eq(6);
@@ -109,7 +109,7 @@ describe("State", () => {
         store.setState({ item: 4 });
         store.goToState(1);
         store.reset();
-        store.currentState.item.should.be.eq(0);
+        store.state().item.should.be.eq(0);
         store.stateAt(2).item.should.be.eq(0);
         store.nextState.item.should.be.eq(0);
         store.prevState.item.should.be.eq(0);
@@ -122,7 +122,7 @@ describe("State", () => {
         store.setState({ item: 4 });
         store.setState({ item: 5 });
         store.setState({ item: 6 });
-        store.currentState.item.should.be.eq(6);
+        store.state().item.should.be.eq(6);
         store.stateAt(0).item.should.be.eq(2);
     });
     it("Should fire action event by setter", () => {
@@ -175,7 +175,7 @@ describe("State", () => {
         await delay(1);
         valueSetter.should.be.eq(5);
         valueFn.should.be.eq(6);
-        store.currentState.item.should.be.eq(6);
+        store.state().item.should.be.eq(6);
     });
     it("Should fire action event by async function", async () => {
         class TempStore extends index_1.Store {

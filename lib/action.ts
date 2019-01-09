@@ -26,7 +26,7 @@ export function action(name?: string): (target: any, propertyKey: string, descri
                 result = await result;
             }
 
-            this.fireEvent(name || propertyKey, this.currentState);
+            this.fireEvent(name || propertyKey, this.state());
 
             return result;
         }
